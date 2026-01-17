@@ -1,0 +1,13 @@
+grafana:
+  enabled: true
+  adminPassword: admin
+  service:
+    type: ClusterIP
+
+prometheus:
+  prometheusSpec:
+    retention: 7d
+    serviceMonitorSelectorNilUsesHelmValues: false
+
+alertmanager:
+  enabled: true
