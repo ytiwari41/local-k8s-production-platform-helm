@@ -6,7 +6,7 @@ metadata:
 spec:
   project: default
   source:
-    repoURL: https://github.com/YOUR_GITHUB/local-k8s-production-platform
+    repoURL: https://github.com/ytiwari41/local-k8s-production-platform-helm.git
     targetRevision: main
     path: helm/sample-app
     helm:
