@@ -126,6 +126,9 @@ ingress/
 observability/
   prometheus-values.yaml
 README.md
+argocd/
+  monitoring-app.yaml
+  sample-app.yaml
 ```
 
 ---
@@ -135,5 +138,82 @@ README.md
 - Ensure Docker Desktop is running before starting.
 - You can customize the values in the YAML files under `ingress/` and `observability/` as needed.
 - For troubleshooting, use `kubectl get pods -A` and `kubectl logs`.
+
+---
+
+## 10. Deploy Sample App and Monitoring via ArgoCD
+
+ArgoCD is used to manage and deploy both the sample application and monitoring components.  
+You can define ArgoCD `Application` resources that point to your Helm charts or manifests.
+
+### Example: Deploy Monitoring Stack via ArgoCD
+
+Create an `Application` manifest (e.g., `argocd/monitoring-app.yaml`):
+
+```yaml
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: monitoring
+  namespace: argocd
+spec:
+  project: default
+  source:
+    repoURL: 'https://prometheus-community.github.io/helm-charts'
+    chart: kube-prometheus-stack
+    targetRevision: 56.6.0 # use the desired version
+    helm:
+      valueFiles:
+        - ../../observability/prometheus-values.yaml
+  destination:
+    server: 'https://kubernetes.default.svc'
+    namespace: monitoring
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+```
+
+Apply it:
+
+```sh
+kubectl apply -f argocd/monitoring-app.yaml
+```
+
+### Example: Deploy Sample App via ArgoCD
+
+Create an `Application` manifest (e.g., `argocd/sample-app.yaml`):
+
+```yaml
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: sample-app
+  namespace: argocd
+spec:
+  project: default
+  source:
+    repoURL: 'https://github.com/your-org/your-sample-app-repo.git'
+    path: helm-chart
+    targetRevision: main
+  destination:
+    server: 'https://kubernetes.default.svc'
+    namespace: sample-app
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+```
+
+Apply it:
+
+```sh
+kubectl apply -f argocd/sample-app.yaml
+```
+
+### Managing Applications
+
+- After applying, ArgoCD will automatically deploy and manage these components.
+- You can view and sync them from the ArgoCD UI (`https://localhost:8080`).
 
 ---
