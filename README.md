@@ -119,16 +119,17 @@ kubectl port-forward svc/monitoring-grafana -n monitoring 3000:80
 ## Project Structure
 
 ```
-cluster/
-  kind-config.yaml
-ingress/
-  ingress-nginx.yaml
-observability/
-  prometheus-values.yaml
-README.md
-argocd/
-  monitoring-app.yaml
-  sample-app.yaml
+local-k8s-production-platform-helm/
+├── argocd/
+│   └── app-of-apps.yaml        # Root ArgoCD application
+├── apps/
+│   ├── sample-app.yaml         # Example application
+│   └── monitoring.yaml         # Monitoring (Prometheus + Grafana)
+├── helm/
+│   └── monitoring/
+│       └── values.yaml         # Optional Helm values
+└── README.md
+
 ```
 
 ---
@@ -210,6 +211,18 @@ Apply it:
 ```sh
 kubectl apply -f argocd/sample-app.yaml
 ```
+
+# Force refresh in ArgoCD
+kubectl annotate application platform-root -n argocd argocd.argoproj.io/refresh=hard
+
+# Check status
+kubectl get applications -n argocd
+
+NAME            SYNC STATUS   HEALTH STATUS
+platform-root   Synced        Healthy
+sample-app      Synced        Healthy
+monitoring      Synced        Healthy
+
 
 ### Managing Applications
 
