@@ -7,5 +7,12 @@ Git Repo
    Kubernetes (kind)
 
 
+
+
+
+
+
+
+
 ![grgocd with simple app](image.png)
 ![grafana](image-1.png)
