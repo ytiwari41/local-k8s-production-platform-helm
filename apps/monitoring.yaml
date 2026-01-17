@@ -9,19 +9,20 @@ spec:
   source:
     repoURL: https://prometheus-community.github.io/helm-charts
     chart: kube-prometheus-stack
-    targetRevision: 58.2.0
+    targetRevision: 59.8.1   # Latest stable
     helm:
       values: |
         grafana:
           enabled: true
           adminPassword: admin
-
+          service:
+            type: ClusterIP
         prometheus:
           prometheusSpec:
             retention: 7d
-
         alertmanager:
           enabled: true
+        installCRDs: true   # Important: auto install required CRDs
 
   destination:
     server: https://kubernetes.default.svc
