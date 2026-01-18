@@ -218,12 +218,6 @@ kubectl annotate application platform-root -n argocd argocd.argoproj.io/refresh=
 # Check status
 kubectl get applications -n argocd
 
-```NAME            SYNC STATUS   HEALTH STATUS
-platform-root   Synced        Healthy
-sample-app      Synced        Healthy
-monitoring      Synced        Healthy
-```
-
 ### Managing Applications
 
 - After applying, ArgoCD will automatically deploy and manage these components.
